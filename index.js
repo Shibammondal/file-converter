@@ -47,6 +47,11 @@ const sendConversionResponse = (res, filename, message) => {
     res.json({ message, filename });
 };
 
+// 📌 Home Route (Test API)
+app.get("/", (req, res) => {
+    res.send("File Converter API is running...");
+});
+
 // 📌 PDF to Word conversion API
 app.post("/convert/pdf-to-word", upload.single("file"), (req, res) => {
     if (!req.file) return res.status(400).json({ message: "No file uploaded!" });
