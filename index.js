@@ -6,8 +6,12 @@ const fs = require("fs");
 
 const app = express();
 
-// ✅ Enable CORS
-app.use(cors());
+// ✅ Enable CORS (Fixed)
+app.use(cors({
+    origin: "*",  // সব origin থেকে access allow করবো
+    methods: ["GET", "POST"],  // শুধু GET, POST মেথড allow করবো
+    allowedHeaders: ["Content-Type"]  // শুধু এই header allow করবো
+}));
 app.use(express.json());
 
 // 📁 Ensure "uploads" directory exists
@@ -31,9 +35,9 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }, // (10MB max size)
     fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [
-            "application/pdf",  // PDF File
-            "text/plain",       // TXT File
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // DOCX File
+            "application/pdf",  
+            "text/plain",       
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ];
         if (!allowedMimeTypes.includes(file.mimetype)) {
             return cb(new Error("Only PDF, TXT, and Word (DOCX) files are allowed!"), false);
