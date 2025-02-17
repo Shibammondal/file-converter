@@ -55,6 +55,7 @@ document.getElementById("convertBtn").addEventListener("click", function () {
     fetch(apiUrl, {
         method: "POST",
         body: formData,
+        mode: "cors",
         headers: {
             // Adding the CORS header
             'Access-Control-Allow-Origin': '*'
