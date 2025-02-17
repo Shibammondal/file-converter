@@ -1,5 +1,5 @@
-// ✅ Backend live URL (এখানে তোমার লাইভ backend URL বসাও)
-const BACKEND_URL = "https://your-backend-live-url.com"; // 🔹 তোমার live backend URL এখানে বসাও
+// ✅ Backend live URL
+const BACKEND_URL = "https://file-converter-iyhl.onrender.com"; 
 
 // ✅ Dark Mode Toggle with Local Storage
 document.getElementById("darkModeToggle").addEventListener("click", function () {
@@ -33,7 +33,7 @@ document.getElementById("convertBtn").addEventListener("click", function () {
     // ✅ Allow only PDF, TXT, and Word files
     let allowedTypes = {
         "pdf-to-word": ["application/pdf"],
-        "word-to-pdf": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+        "word-to-pdf": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"],
         "text-to-pdf": ["text/plain"]
     };
 
@@ -50,12 +50,11 @@ document.getElementById("convertBtn").addEventListener("click", function () {
     document.getElementById("message").innerText = "";
     document.getElementById("downloadLink").style.display = "none"; // Hide download button initially
 
-    let apiUrl = `${BACKEND_URL}/convert/${conversionType}`; // 🔹 Backend এর লাইভ URL ব্যবহার করা হচ্ছে
+    let apiUrl = `${BACKEND_URL}/convert/${conversionType}`;
 
     fetch(apiUrl, {
         method: "POST",
-        body: formData,
-        mode: "cors",
+        body: formData
     })
     .then(response => {
         if (!response.ok) {
@@ -71,7 +70,7 @@ document.getElementById("convertBtn").addEventListener("click", function () {
 
         if (data.filename) {
             let downloadLink = document.getElementById("downloadLink");
-            downloadLink.href = `${https://file-converter-iyhl.onrender.com}/uploads/${data.filename}`;
+            downloadLink.href = `${BACKEND_URL}/uploads/${data.filename}`;
             downloadLink.style.display = "inline-block"; // ✅ Show the download button
             downloadLink.innerHTML = `<i class="fa-solid fa-download"></i> Download ${conversionType.replace("-", " ").toUpperCase()}`;
         }
