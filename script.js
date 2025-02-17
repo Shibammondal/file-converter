@@ -1,3 +1,6 @@
+// ✅ Backend live URL (এখানে তোমার লাইভ backend URL বসাও)
+const BACKEND_URL = "https://your-backend-live-url.com"; // 🔹 তোমার live backend URL এখানে বসাও
+
 // ✅ Dark Mode Toggle with Local Storage
 document.getElementById("darkModeToggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
@@ -47,7 +50,7 @@ document.getElementById("convertBtn").addEventListener("click", function () {
     document.getElementById("message").innerText = "";
     document.getElementById("downloadLink").style.display = "none"; // Hide download button initially
 
-    let apiUrl = `http://localhost:3000/convert/${conversionType}`;
+    let apiUrl = `${BACKEND_URL}/convert/${conversionType}`; // 🔹 Backend এর লাইভ URL ব্যবহার করা হচ্ছে
 
     fetch(apiUrl, {
         method: "POST",
@@ -68,7 +71,7 @@ document.getElementById("convertBtn").addEventListener("click", function () {
 
         if (data.filename) {
             let downloadLink = document.getElementById("downloadLink");
-            downloadLink.href = `http://localhost:3000/uploads/${data.filename}`;
+            downloadLink.href = `${https://file-converter-iyhl.onrender.com}/uploads/${data.filename}`;
             downloadLink.style.display = "inline-block"; // ✅ Show the download button
             downloadLink.innerHTML = `<i class="fa-solid fa-download"></i> Download ${conversionType.replace("-", " ").toUpperCase()}`;
         }
