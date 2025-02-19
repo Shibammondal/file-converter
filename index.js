@@ -6,11 +6,11 @@ const fs = require("fs");
 
 const app = express();
 
-// ✅ Enable CORS (Fixed)
+// ✅ Enable CORS (Already Fixed)
 app.use(cors({
-    origin: "*",  // সব origin থেকে access allow করবো
-    methods: ["GET", "POST"],  // শুধু GET, POST মেথড allow করবো
-    allowedHeaders: ["Content-Type"]  // শুধু এই header allow করবো
+    origin: "*",  
+    methods: ["GET", "POST"],  
+    allowedHeaders: ["Content-Type"]
 }));
 app.use(express.json());
 
@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
     storage, 
-    limits: { fileSize: 10 * 1024 * 1024 }, // (10MB max size)
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [
             "application/pdf",  
@@ -92,8 +92,12 @@ app.post("/convert/text-to-pdf", upload.single("file"), (req, res) => {
     }
 });
 
-// 📂 Serve uploaded files
+// 📂 Serve uploaded files & static assets (Favicon Fix)
 app.use("/uploads", express.static(uploadDir));
+app.use(express.static(path.join(__dirname, "public"))); // 📌 Serve favicon.ico
+
+// 📌 Fix favicon.ico request error
+app.get("/favicon.ico", (req, res) => res.status(204));
 
 // 🚀 Start the server
 const PORT = process.env.PORT || 3000;
