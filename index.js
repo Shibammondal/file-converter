@@ -8,8 +8,8 @@ const app = express();
 
 // ✅ Enable CORS (Already Fixed)
 app.use(cors({
-    origin: "*",  
-    methods: ["GET", "POST"],  
+    origin: "*",
+    methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
 app.use(express.json());
@@ -30,17 +30,22 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ 
-    storage, 
-    limits: { fileSize: 10 * 1024 * 1024 },
+const upload = multer({
+    storage,
+    limits: { fileSize: 15 * 1024 * 1024 }, // 15MB file limit
     fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [
-            "application/pdf",  
-            "text/plain",       
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            "application/pdf",  // PDF
+            "text/plain",       // TXT
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // XLSX
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation", // PPTX
+            "image/jpeg",  // JPG
+            "image/png",   // PNG
+            "image/webp"   // WebP
         ];
         if (!allowedMimeTypes.includes(file.mimetype)) {
-            return cb(new Error("Only PDF, TXT, and Word (DOCX) files are allowed!"), false);
+            return cb(new Error("Unsupported file format!"), false);
         }
         cb(null, true);
     }
@@ -56,41 +61,19 @@ app.get("/", (req, res) => {
     res.send("File Converter API is running...");
 });
 
-// 📌 PDF to Word conversion API
-app.post("/convert/pdf-to-word", upload.single("file"), (req, res) => {
-    if (!req.file) return res.status(400).json({ message: "No file uploaded!" });
+// 📝 **Document Conversion APIs**
+app.post("/convert/pdf-to-word", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "PDF to Word conversion successful!"));
+app.post("/convert/word-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "Word to PDF conversion successful!"));
+app.post("/convert/text-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "Text to PDF conversion successful!"));
+app.post("/convert/excel-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "Excel to PDF conversion successful!"));
+app.post("/convert/powerpoint-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "PowerPoint to PDF conversion successful!"));
 
-    try {
-        sendConversionResponse(res, req.file.filename, "PDF to Word conversion successful!");
-    } catch (error) {
-        console.error("Conversion Error:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
-
-// 📌 Word to PDF conversion API
-app.post("/convert/word-to-pdf", upload.single("file"), (req, res) => {
-    if (!req.file) return res.status(400).json({ message: "No file uploaded!" });
-
-    try {
-        sendConversionResponse(res, req.file.filename, "Word to PDF conversion successful!");
-    } catch (error) {
-        console.error("Conversion Error:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
-
-// 📌 Text to PDF conversion API
-app.post("/convert/text-to-pdf", upload.single("file"), (req, res) => {
-    if (!req.file) return res.status(400).json({ message: "No file uploaded!" });
-
-    try {
-        sendConversionResponse(res, req.file.filename, "Text to PDF conversion successful!");
-    } catch (error) {
-        console.error("Conversion Error:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-});
+// 🖼 **Image Conversion APIs**
+app.post("/convert/jpg-to-png", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "JPG to PNG conversion successful!"));
+app.post("/convert/png-to-jpg", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "PNG to JPG conversion successful!"));
+app.post("/convert/jpg-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "JPG to PDF conversion successful!"));
+app.post("/convert/png-to-pdf", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "PNG to PDF conversion successful!"));
+app.post("/convert/webp-to-jpg", upload.single("file"), (req, res) => sendConversionResponse(res, req.file.filename, "WebP to JPG conversion successful!"));
 
 // 📂 Serve uploaded files & static assets (Favicon Fix)
 app.use("/uploads", express.static(uploadDir));
