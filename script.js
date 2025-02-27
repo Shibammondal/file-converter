@@ -44,11 +44,17 @@ if (convertBtn) {
             return;
         }
 
-        // ✅ Allow only PDF, TXT, and Word files
+        // ✅ Allowed File Types for Different Conversions
         let allowedTypes = {
             "pdf-to-word": ["application/pdf"],
             "word-to-pdf": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"],
-            "text-to-pdf": ["text/plain"]
+            "text-to-pdf": ["text/plain"],
+            "pdf-to-image": ["application/pdf"],
+            "image-to-pdf": ["image/jpeg", "image/png"],
+            "excel-to-pdf": ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+            "pdf-to-excel": ["application/pdf"],
+            "ppt-to-pdf": ["application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation"],
+            "pdf-to-ppt": ["application/pdf"]
         };
 
         if (!allowedTypes[conversionType.value]?.includes(file.type)) {
